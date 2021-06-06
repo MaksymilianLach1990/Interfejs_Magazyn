@@ -1,8 +1,9 @@
 import time
 timer = time.time()
 users = {'admin': "0000"}
-items = [{'name': 'Milk', 'quantity': 120, 'unit': 'l', 'unit price': 2.50}, {'name': 'Egg', 'quantity': 1200,
-                                                                              'unit': 'piece', 'unit price': 0.50}]
+items = [{'name': 'Milk', 'quantity': 120, 'unit': 'l', 'unit price': 2.50},
+         {'name': 'Egg', 'quantity': 1200, 'unit': 'piece', 'unit price': 0.50},
+         {'name': 'Wood', 'quantity': 200, 'unit': 'mb', 'unit price': 5.00}]
 
 
 def check_user(login):
@@ -41,7 +42,13 @@ def stock_status():
 
 
 def sell_item():
-    pass
+    name = input("Item name: ")
+    quantity = int(input("Quantity to sell: "))
+    for number in range(0, len(items)):
+        if name == items[number].get('name'):
+            items[number]['quantity'] = items[number]['quantity'] - quantity
+        else:
+            pass
 
 
 def buy_item():
