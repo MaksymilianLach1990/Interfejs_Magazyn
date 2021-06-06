@@ -51,7 +51,7 @@ def sell_item():
             sold_items.append({'name': items[number]['name'], 'quantity': quantity, 'unit': items[number]['unit'],
                                'unit price': items[number]['unit price']})
         else:
-            pass
+            print("No item in stock. Try again.")
 
 
 def get_costs():
@@ -60,16 +60,21 @@ def get_costs():
 
 
 def get_income():
-    income = sum([sold_items[number]['quantity'] * sold_items[number]['unit price'] for number in range(0, len(items))])
-    return income
+    if len(sold_items) == 0:
+        return 0
+    else:
+        income = sum([sold_items[number]['quantity'] * sold_items[number]['unit price'] for number in range(0, len(sold_items))])
+        return income
 
 
 def show_revenue():
+    print("{:69}".format('.' * 69))
     print("Revenue breakdown (PLN)")
     print("Income: {}".format(get_income()))
     print("Costs: {}".format(get_costs()))
-    print("{:69}".format('-' * 69))
-    print("Revenue: {}".format(get_costs()-get_income()))
+    print("{:69}".format('_' * 69))
+    print("Revenue: {}".format(get_income()-get_costs()))
+    print('')
 
 
 def buy_item():
@@ -87,11 +92,11 @@ if __name__ == "__main__":
         #else:
           #  exit(1)
         # Rozpoczęcie pracy w aplikacji
-        print("\nHello {}, what would you like to do?\n".format(login))
+        print("\nHello {}.\n".format(login))
         while True:
             # Menu aplikacji
-            print("MENU: \nWarehouse status [status]\nAdd item [add]\nSell item [sell]")
-            user = input()
+            print("MENU: \nWarehouse status [status]\nAdd item [add]\nSell item [sell]\nShow revenue [revenue]")
+            user = input("What would you like to do? ")
             if user == 'status':
                 stock_status()
             elif user == 'add':
