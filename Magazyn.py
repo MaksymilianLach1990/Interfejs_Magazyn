@@ -4,12 +4,13 @@ users = {'admin': "0000"}
 items = [{'name': 'Milk', 'quantity': 120, 'unit': 'l', 'unit price': 2.50},
          {'name': 'Egg', 'quantity': 1200, 'unit': 'piece', 'unit price': 0.50},
          {'name': 'Wood', 'quantity': 200, 'unit': 'mb', 'unit price': 5.00}]
+sold_items = []
 
 
-def check_user(login):
-    if login in users.keys():
+def check_user(name):
+    if name in users.keys():
         password = input("User password: ")
-        if users[login] == password:
+        if users[name] == password:
             return True
         else:
             print("Warning!! Wrong password!! Try again.")
@@ -19,7 +20,7 @@ def check_user(login):
         return False
 
 
-def add_user(login):
+def add_user():
     pass
 
 
@@ -47,8 +48,28 @@ def sell_item():
     for number in range(0, len(items)):
         if name == items[number].get('name'):
             items[number]['quantity'] = items[number]['quantity'] - quantity
+            sold_items.append({'name': items[number]['name'], 'quantity': quantity, 'unit': items[number]['unit'],
+                               'unit price': items[number]['unit price']})
         else:
             pass
+
+
+def get_costs():
+    costs = sum([items[number]['quantity'] * items[number]['unit price'] for number in range(0, len(items))])
+    return costs
+
+
+def get_income():
+    income = sum([sold_items[number]['quantity'] * sold_items[number]['unit price'] for number in range(0, len(items))])
+    return income
+
+
+def show_revenue():
+    print("Revenue breakdown (PLN)")
+    print("Income: {}".format(get_income()))
+    print("Costs: {}".format(get_costs()))
+    print("{:69}".format('-' * 69))
+    print("Revenue: {}".format(get_costs()-get_income()))
 
 
 def buy_item():
@@ -79,10 +100,12 @@ if __name__ == "__main__":
             elif user == 'sell':
                 sell_item()
                 stock_status()
+            elif user == 'revenue':
+                show_revenue()
             elif user == 'exit':
                 exit()
             else:
                 print("Wrong command.")
         # Zakończenie pracy programu
         print(time.time() - timer)
-        exit("Miłego dnia. Zapraszamy ponownie. Poprawne Wyłączenie.")
+        exit("Have a nice day. Please come back.")
