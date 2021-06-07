@@ -1,4 +1,5 @@
 import time
+import csv
 timer = time.time()
 users = {'admin': "0000"}
 items = [{'name': 'Milk', 'quantity': 120, 'unit': 'l', 'unit price': 2.50},
@@ -63,7 +64,8 @@ def get_income():
     if len(sold_items) == 0:
         return 0
     else:
-        income = sum([sold_items[number]['quantity'] * sold_items[number]['unit price'] for number in range(0, len(sold_items))])
+        income = sum([sold_items[number]['quantity'] * sold_items[number]['unit price']
+                      for number in range(0, len(sold_items))])
         return income
 
 
@@ -73,12 +75,19 @@ def show_revenue():
     print("Income: {}".format(get_income()))
     print("Costs: {}".format(get_costs()))
     print("{:69}".format('_' * 69))
-    print("Revenue: {}".format(get_income()-get_costs()))
+    print("Revenue: {}".format(round(get_income()-get_costs()), 2))
     print('')
 
 
-def buy_item():
-    pass
+def export_items_to_csv():
+    with open('magazyn.csv', 'w', newline='') as csvfile:
+        fieldname = ['name', 'quantity', 'unit', 'unit price']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldname)
+        writer.writeheader()
+        for num_item in range(0, len(items)):
+            writer.writerow({'name': items[num_item]['name'], 'quantity': items[num_item]['quantity'],
+                             'unit': items[num_item]['unit'], 'unit price': items[num_item]['unit price']})
+    print("Successfully exported data to 'magazyn.csv'.")
 
 
 # Rozruch aplikacji
@@ -95,7 +104,8 @@ if __name__ == "__main__":
         print("\nHello {}.\n".format(login))
         while True:
             # Menu aplikacji
-            print("MENU: \nWarehouse status [status]\nAdd item [add]\nSell item [sell]\nShow revenue [revenue]")
+            print("\nMENU: \nWarehouse status [status]\nAdd item [add]\nSell item [sell]\nShow revenue [revenue]\n"
+                  "Save your inventory [save]\nEnd of work [exit]")
             user = input("What would you like to do? ")
             if user == 'status':
                 stock_status()
@@ -107,6 +117,8 @@ if __name__ == "__main__":
                 stock_status()
             elif user == 'revenue':
                 show_revenue()
+            elif user == 'save':
+                export_items_to_csv()
             elif user == 'exit':
                 exit()
             else:
