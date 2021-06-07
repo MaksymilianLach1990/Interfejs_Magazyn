@@ -1,5 +1,6 @@
 import time
 import csv
+import sys
 timer = time.time()
 users = {'admin': "0000"}
 items = [{'name': 'Milk', 'quantity': 120, 'unit': 'l', 'unit price': 2.50},
@@ -80,18 +81,33 @@ def show_revenue():
 
 
 def export_items_to_csv():
-    with open('magazyn.csv', 'w', newline='') as csvfile:
+    with open('Green_house.csv', 'w', newline='') as csvfile:
         fieldname = ['name', 'quantity', 'unit', 'unit price']
         writer = csv.DictWriter(csvfile, fieldnames=fieldname)
         writer.writeheader()
         for num_item in range(0, len(items)):
             writer.writerow({'name': items[num_item]['name'], 'quantity': items[num_item]['quantity'],
                              'unit': items[num_item]['unit'], 'unit price': items[num_item]['unit price']})
-    print("Successfully exported data to 'magazyn.csv'.")
+    print("Successfully exported data to 'Green_house.csv'.")
+
+
+def load_items_from_csv(source):
+    items.clear()
+    with open(source, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            items.append(row)
+        for num_item in range(0, len(items)):
+            items[num_item]['quantity'] = int(items[num_item]['quantity'])
+            items[num_item]['unit price'] = float(items[num_item]['unit price'])
+    print("Successfully import data to 'Green_house.csv'.")
 
 
 # Rozruch aplikacji
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+        load_items_from_csv(path)
     print("Welcome to the 'Green World' warehouse.")
     # Logowanie do systemu
     while True:
@@ -105,7 +121,7 @@ if __name__ == "__main__":
         while True:
             # Menu aplikacji
             print("\nMENU: \nWarehouse status [status]\nAdd item [add]\nSell item [sell]\nShow revenue [revenue]\n"
-                  "Save your inventory [save]\nEnd of work [exit]")
+                  "Save your inventory [save]\nLoad up-to-data data [load]\nEnd of work [exit]")
             user = input("What would you like to do? ")
             if user == 'status':
                 stock_status()
@@ -119,6 +135,11 @@ if __name__ == "__main__":
                 show_revenue()
             elif user == 'save':
                 export_items_to_csv()
+            elif user == 'load':
+                path = input("Please enter path(standard file 'Green_house.csv'): ")
+                if path == '':
+                    path = 'Green_house.csv'
+                load_items_from_csv(path)
             elif user == 'exit':
                 exit()
             else:
